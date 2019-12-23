@@ -498,7 +498,7 @@
       left: index * 50 + "px"
     },
     class: `ex3-item ex3-item-${status}`
-  }, "value")), h("div", null, h("button", {
+  }, value)), h("div", null, h("button", {
     onclick: addItem
   }, "Add an item"), h("button", {
     onclick: removeItem
