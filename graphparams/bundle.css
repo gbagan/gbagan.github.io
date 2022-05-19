@@ -16,11 +16,6 @@ a {
   cursor: pointer;
 }
 
-.graphparams-layout {
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
 .col-6 {
   display: block;
   flex: 0 0 25%;
@@ -106,6 +101,12 @@ a {
 .graphparams-graphview-vertex.color3 {
   fill: orange;
 }
+.graphparams-graphview-vertex.color4 {
+  fill: cyan;
+}
+.graphparams-graphview-vertex.color5 {
+  fill: magenta;
+}
 .graphparams-graphview-vertex.deletemode:hover {
   fill: gray;
 }
@@ -120,12 +121,11 @@ a {
 .graphparams-graphview-edge.color1 {
   stroke: red;
 }
-.graphparams-graphview-edge.color2 {
-  stroke: green;
-}
-.graphparams-graphview-edge.color3 {
-  stroke: orange;
-}
 .graphparams-graphview-edge.deletemode:hover {
   stroke: gray;
+}
+
+.graphview-text {
+  font: bold 7px sans-serif;
+  fill: red;
 }
