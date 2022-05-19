@@ -118,6 +118,27 @@
     }
     return true;
   };
+  var difference = (l1, l2) => {
+    const res = [];
+    let i = 0;
+    let j = 0;
+    const n = l1.length;
+    const m = l2.length;
+    while (i < n && j < m) {
+      const x = l1[i];
+      const y = l2[j];
+      if (x === y) {
+        i++;
+        j++;
+      } else if (x < y) {
+        res.push(l1[i]);
+        i++;
+      } else {
+        j++;
+      }
+    }
+    return res;
+  };
 
   // src/worker/lib/graph/graph.js
   var graph = (nbVertices2) => times(() => [], nbVertices2);
@@ -472,13 +493,13 @@
     if (chordal) {
       return { result: true, wtype: "order", witness: lbfs };
     }
-    const i = lbfs.indexOf(witness[0]);
-    const g2 = inducedGraph(graph2, lbfs.slice(0, i));
-    const path = alternativePath(g2, lbfs.indexOf(witness[1]), lbfs.indexOf(witness[2])).witness;
+    const ss = difference(range(0, graph2.length), graph2[witness[0]]).filter((i) => i != witness[0]).concat([witness[1], witness[2]]).sort((a, b) => a - b);
+    const g2 = inducedGraph(graph2, ss);
+    const path = alternativePath(g2, ss.indexOf(witness[1]), ss.indexOf(witness[2])).witness;
     return {
       result: false,
       wtype: "path",
-      witness: [witness[0]].concat(path.map((j) => lbfs[j])).concat(witness[0])
+      witness: [witness[0]].concat(path.map((j) => ss[j])).concat(witness[0])
     };
   };
   var chordal_default = isChordal;
@@ -645,11 +666,11 @@
       }
       nborInSet.push(s);
     }
-    return allDifferent(nborInSet.sort());
+    return allDifferent(nborInSet.sort((a, b) => a - b));
   };
   var identifyingCode = (g) => {
     const binNbors = times((j) => encode(g[j].concat(j)), g.length);
-    if (!allDifferent(binNbors.sort())) {
+    if (!allDifferent(binNbors.sort((a, b) => a - b))) {
       return { result: -1, wtype: "nowitness", witness: [] };
     }
     let i = 1;
@@ -673,7 +694,7 @@
         nborInSet.push(s);
       }
     }
-    return allDifferent(nborInSet.sort());
+    return allDifferent(nborInSet.sort((a, b) => a - b));
   };
   var locatingDominatingSet = (g) => {
     const binNbors = [];
