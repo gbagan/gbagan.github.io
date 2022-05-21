@@ -131,11 +131,15 @@
         i++;
         j++;
       } else if (x < y) {
-        res.push(l1[i]);
+        res.push(x);
         i++;
       } else {
         j++;
       }
+    }
+    while (i < n) {
+      res.push(l1[i]);
+      i++;
     }
     return res;
   };
@@ -200,11 +204,11 @@
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
         if (g[i].length != g[j].length) {
-          return { result: false, wtype: "set", witness: [i, j] };
+          return { result: false, ctype: "set", certificate: [i, j] };
         }
       }
     }
-    return { result: true, wtype: "nowitness", witness: [] };
+    return { result: true, ctype: "nocertificate", certificate: [] };
   };
   var isConnected = (graph2) => {
     const visited = new Array(graph2.lenth);
@@ -227,11 +231,11 @@
   };
   var isHamiltonian = (graph2) => {
     if (graph2.length === 1)
-      return { result: true, wtype: "path", witness: [0] };
+      return { result: true, ctype: "path", certificate: [0] };
     if (graph2.length === 2)
-      return { result: false, wtype: "nowitness", witness: [] };
+      return { result: false, ctype: "nocertificate", certificate: [] };
     const res = hamiltonAux(graph2, [0]);
-    return res ? { result: true, wtype: "path", witness: res.concat(res[0]) } : { result: false, wtype: "nowitness", witness: [] };
+    return res ? { result: true, ctype: "path", certificate: res.concat(res[0]) } : { result: false, ctype: "nocertificate", certificate: [] };
   };
   var hamiltonAux = (graph2, path) => {
     const last = path[path.length - 1];
@@ -239,8 +243,9 @@
       return hasEdge(graph2, path[0], last) ? path : null;
     } else {
       for (const v of graph2[last]) {
-        if (path.includes(v))
+        if (path.includes(v)) {
           continue;
+        }
         const res = hamiltonAux(graph2, path.concat(v));
         if (res) {
           return res;
@@ -267,7 +272,7 @@
       order.push(bestVertex);
       maxdegree = Math.max(maxdegree, minDeg);
     }
-    return { result: maxdegree, wtype: "order", witness: order };
+    return { result: maxdegree, ctype: "order", certificate: order };
   };
   var eccentricity = (graph2, vertex) => {
     const distance = new Array(graph2.length);
@@ -290,7 +295,7 @@
       }
     }
     if (nbVisited !== graph2.length) {
-      return { result: -1, wtype: "nowitness", witness: [] };
+      return { result: -1, ctype: "nocertificate", certificate: [] };
     } else {
       let u2 = maxBy(range(0, graph2.length), (w) => distance[w]);
       const path = [u2];
@@ -298,7 +303,7 @@
         u2 = parent[u2];
         path.push(u2);
       }
-      return { result: path.length - 1, wtype: "path", witness: path.reverse() };
+      return { result: path.length - 1, ctype: "path", certificate: path.reverse() };
     }
   };
   var alternativePath = (graph2, v1, v2) => {
@@ -323,7 +328,7 @@
       }
     }
     if (distance[v2] === -1) {
-      return { result: Infinity, witness: null };
+      return { result: Infinity, certificate: null };
     } else {
       const path = [v2];
       let u2 = v2;
@@ -331,15 +336,15 @@
         u2 = parent[u2];
         path.push(u2);
       }
-      return { result: path.length - 1, wtype: "path", witness: path };
+      return { result: path.length - 1, ctype: "path", certificate: path };
     }
   };
   var girth = (graph2) => {
-    let bestRes = { result: Infinity, witness: null };
+    let bestRes = { result: Infinity, certificate: null };
     for (const [u2, v] of edges(graph2)) {
       const res = alternativePath(graph2, u2, v);
       if (res.result !== Infinity && res.result + 1 < bestRes.result) {
-        bestRes = { result: res.result + 1, wtype: "path", witness: res.witness.concat(res.witness[0]) };
+        bestRes = { result: res.result + 1, ctype: "path", certificate: res.certificate.concat(res.certificate[0]) };
       }
     }
     return bestRes;
@@ -369,7 +374,7 @@
         }
       }
       if (isets2.length === 0) {
-        return { result: i, wtype: "set", witness: decode(isets[0]) };
+        return { result: i, ctype: "subgraph", certificate: decode(isets[0]) };
       }
       isets = isets2;
       i++;
@@ -469,37 +474,37 @@
     for (let i = 0; i < set.length - 1; i++) {
       for (let j = i + 1; j < set.length; j++) {
         if (!hasEdge(graph2, set[i], set[j])) {
-          return { result: false, witness: [set[i], set[j]] };
+          return { result: false, certificate: [set[i], set[j]] };
         }
       }
     }
-    return { result: true, witness: null };
+    return { result: true, certificate: null };
   };
   var isChordal = (graph2) => {
     const lbfs = lexbfs_default(graph2, 0);
     const visited = /* @__PURE__ */ new Set();
     let chordal = true;
-    let witness = [];
+    let certificate = [];
     for (const v of lbfs) {
       const nbor = graph2[v].filter((u2) => visited.has(u2));
       const res = hasClique(graph2, nbor);
       if (!res.result) {
         chordal = false;
-        witness = [v, res.witness[0], res.witness[1]];
+        certificate = [v, res.certificate[0], res.certificate[1]];
         break;
       }
       visited.add(v);
     }
     if (chordal) {
-      return { result: true, wtype: "order", witness: lbfs };
+      return { result: true, ctype: "order", certificate: lbfs };
     }
-    const ss = difference(range(0, graph2.length), graph2[witness[0]]).filter((i) => i != witness[0]).concat([witness[1], witness[2]]).sort((a, b) => a - b);
+    const ss = difference(range(0, graph2.length), graph2[certificate[0]]).filter((i) => i != certificate[0]).concat([certificate[1], certificate[2]]).sort((a, b) => a - b);
     const g2 = inducedGraph(graph2, ss);
-    const path = alternativePath(g2, ss.indexOf(witness[1]), ss.indexOf(witness[2])).witness;
+    const path = alternativePath(g2, ss.indexOf(certificate[1]), ss.indexOf(certificate[2])).certificate;
     return {
       result: false,
-      wtype: "path",
-      witness: [witness[0]].concat(path.map((j) => ss[j])).concat(witness[0])
+      ctype: "path",
+      certificate: [certificate[0]].concat(path.map((j) => ss[j])).concat(certificate[0])
     };
   };
   var chordal_default = isChordal;
@@ -516,7 +521,7 @@
       usedColor.fill(false);
       const res = chromaticAux(graph2, binNbors, precol, uncoloredList, i, usedColor, predicate);
       if (res) {
-        return { result: i, wtype: "color", witness: res };
+        return { result: i, ctype: "color", certificate: res };
       }
       i++;
     }
@@ -550,7 +555,8 @@
   };
   var coloringClasses = (coloring) => {
     const n = maximum(coloring) + 1;
-    const classes = times(() => 0, n);
+    const classes = new Array(n);
+    classes.fill(0);
     for (let i = 0; i < coloring.length; i++) {
       classes[coloring[i]] |= 1 << i;
     }
@@ -572,7 +578,7 @@
   var dominatingSet = (graph2) => dominationAux(graph2, [], range(0, graph2.length));
   var dominationAux = (graph2, preset, undom) => {
     if (undom.length === 0) {
-      return { result: preset.length, wtype: "set", witness: preset };
+      return { result: preset.length, ctype: "set", certificate: preset };
     }
     const v = undom[0];
     const nbor = graph2[v].concat(v);
@@ -601,7 +607,7 @@
             const iset2 = iset | 1 << ii;
             const dom2 = dom | 1 << ii | nbors[ii];
             if (dom2 + 1 === 1 << graph2.length) {
-              return { result: i + 1, wtype: "set", witness: decode(iset2) };
+              return { result: i + 1, ctype: "set", certificate: decode(iset2) };
             }
             isets2.push([iset2, dom2]);
           }
@@ -614,7 +620,7 @@
   var totalDominatingSet = (graph2) => totalDominationAux(graph2, [], range(0, graph2.length));
   var totalDominationAux = (graph2, preset, undom) => {
     if (undom.length === 0) {
-      return { result: preset.length, wtype: "set", witness: preset };
+      return { result: preset.length, ctype: "set", certificate: preset };
     }
     const v = undom[0];
     const nbor = graph2[v].concat(v);
@@ -634,11 +640,11 @@
   var connectedDominatingSet = (graph2) => connectedDominationAux(graph2, [], range(0, graph2.length), /* @__PURE__ */ new Set());
   var connectedDominationAux = (graph2, preset, undom, adj) => {
     if (undom.length === 0) {
-      return { result: preset.length, wtype: "set", witness: preset };
+      return { result: preset.length, ctype: "set", certificate: preset };
     }
     const v = 0;
     const candidates = preset.length === 0 ? new Set(graph2[v].concat(v)) : adj;
-    let bestRes = { result: Infinity, witness: null };
+    let bestRes = { result: Infinity, certificate: null };
     for (const u2 of candidates) {
       const undom2 = undom.filter((w) => u2 !== w && !hasEdge(graph2, u2, w));
       const adj2 = new Set(adj);
@@ -671,13 +677,13 @@
   var identifyingCode = (g) => {
     const binNbors = times((j) => encode(g[j].concat(j)), g.length);
     if (!allDifferent(binNbors.sort((a, b) => a - b))) {
-      return { result: -1, wtype: "nowitness", witness: [] };
+      return { result: -1, ctype: "nocertificate", certificate: [] };
     }
     let i = 1;
     while (true) {
       for (const bset of subsets(g.length, i)) {
         if (isIdentifyingCode(g, binNbors, bset)) {
-          return { result: i, wtype: "set", witness: decode(bset) };
+          return { result: i, ctype: "set", certificate: decode(bset) };
         }
       }
       i++;
@@ -705,7 +711,7 @@
     while (true) {
       for (const bset of subsets(g.length, i)) {
         if (isLocatingDominatingSet(g, binNbors, bset)) {
-          return { result: i, wtype: "set", witness: decode(bset) };
+          return { result: i, ctype: "set", certificate: decode(bset) };
         }
       }
       i++;
@@ -837,7 +843,7 @@
       }
       matching = matching.filter(([x, y]) => !excludeSet.has(edgeId(graph2, x, y)));
     }
-    return { result: matching.length, wtype: "edges", witness: matching.flat() };
+    return { result: matching.length, ctype: "edges", certificate: matching.flat() };
   };
   var matching_default = maximumMatching;
 
@@ -932,7 +938,7 @@
     const { graph: graph2, param } = msg.data;
     const fn = functions[param];
     const result = fn(graph2);
-    const result2 = typeof result === "boolean" || typeof result === "number" ? { result, wtype: "nowitness", witness: [] } : result;
+    const result2 = typeof result === "boolean" || typeof result === "number" ? { result, ctype: "nocertificate", certificate: [] } : result;
     self.postMessage({ ...result2, result: "" + result2.result });
   };
 })();
