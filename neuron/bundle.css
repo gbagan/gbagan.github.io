@@ -1,6 +1,6 @@
 body {
   color: rgba(0, 0, 0, 0.65);
-  font-size: 14px;
+  font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-variant: tabular-nums;
   line-height: 1.5715;
@@ -53,6 +53,66 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.ui-button {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 0 1em;
+  border-radius: 0.25em;
+  height: 2em;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  position: relative;
+  background: white;
+  border-color: #d9d9d9;
+  outline: 0;
+}
+.ui-button:not(:disabled):hover {
+  text-decoration: none;
+}
+.ui-button:not(:disabled):active {
+  transition: none;
+}
+.ui-button:hover, .ui-button:active {
+  text-decoration: none;
+}
+.ui-button > span {
+  pointer-events: none;
+}
+.ui-button:hover, .ui-button:focus {
+  color: #40a9ff;
+  background-color: white;
+  border-color: #40a9ff;
+}
+.ui-button:active {
+  color: #096dd9;
+  background-color: white;
+  border-color: #096dd9;
+}
+.ui-button.ui-button-primary {
+  color: #fff;
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+.ui-button.ui-button-primary:hover, .ui-button.ui-button-primary:focus {
+  color: #fff;
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+.ui-button.ui-button-primary:active {
+  color: #fff;
+  background-color: #096dd9;
+  border-color: #096dd9;
+}
+.ui-button:disabled {
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.25);
+  background-color: #f5f5f5;
+  border-color: #d9d9d9;
 }
 
 .ui-dialog-container {
@@ -127,15 +187,6 @@ a {
 }
 .pattern-pixel.selected.black {
   background: darkgreen;
-}
-
-.neuron {
-  position: absolute;
-  background-color: pink;
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  transform: translate(-40px, -40px);
 }
 
 .pattern-editor {
