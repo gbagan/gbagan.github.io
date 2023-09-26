@@ -4563,9 +4563,6 @@
   var index2 = /* @__PURE__ */ function() {
     return runFn4(indexImpl)(Just.create)(Nothing.value);
   }();
-  var last = function(xs) {
-    return index2(xs)(length5(xs) - 1 | 0);
-  };
   var filter2 = /* @__PURE__ */ runFn2(filterImpl);
   var drop = function(n) {
     return function(xs) {
@@ -4779,6 +4776,34 @@
     O2.value = new O2();
     return O2;
   }();
+  var InProgress = /* @__PURE__ */ function() {
+    function InProgress2() {
+    }
+    ;
+    InProgress2.value = new InProgress2();
+    return InProgress2;
+  }();
+  var HasWon = /* @__PURE__ */ function() {
+    function HasWon2() {
+    }
+    ;
+    HasWon2.value = new HasWon2();
+    return HasWon2;
+  }();
+  var HasLost = /* @__PURE__ */ function() {
+    function HasLost2() {
+    }
+    ;
+    HasLost2.value = new HasLost2();
+    return HasLost2;
+  }();
+  var CannotWin = /* @__PURE__ */ function() {
+    function CannotWin2() {
+    }
+    ;
+    CannotWin2.value = new CannotWin2();
+    return CannotWin2;
+  }();
   var eqSymb = {
     eq: function(x4) {
       return function(y4) {
@@ -4800,6 +4825,29 @@
   };
   var eq13 = /* @__PURE__ */ eq(/* @__PURE__ */ eqMaybe(eqSymb));
   var notEq2 = /* @__PURE__ */ notEq(eqSymb);
+  var eqStatus = {
+    eq: function(x4) {
+      return function(y4) {
+        if (x4 instanceof InProgress && y4 instanceof InProgress) {
+          return true;
+        }
+        ;
+        if (x4 instanceof HasWon && y4 instanceof HasWon) {
+          return true;
+        }
+        ;
+        if (x4 instanceof HasLost && y4 instanceof HasLost) {
+          return true;
+        }
+        ;
+        if (x4 instanceof CannotWin && y4 instanceof CannotWin) {
+          return true;
+        }
+        ;
+        return false;
+      };
+    }
+  };
   var rows5 = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24], [0, 5, 10, 15, 20], [1, 6, 11, 16, 21], [2, 7, 12, 17, 22], [3, 8, 13, 18, 23], [4, 9, 14, 19, 24], [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]];
   var rows4 = /* @__PURE__ */ append(semigroupArray)(/* @__PURE__ */ bind(bindArray)(rows5)(function(row) {
     return [take(4)(row), drop(1)(row)];
@@ -4813,7 +4861,7 @@
       return rows5;
     }
     ;
-    throw new Error("Failed pattern match at Tictactoe.Model (line 38, column 8 - line 40, column 18): " + [rules.constructor.name]);
+    throw new Error("Failed pattern match at Tictactoe.Model (line 41, column 8 - line 43, column 18): " + [rules.constructor.name]);
   }();
   var normalizeTable = function(table) {
     var table$prime = filter2(function(v) {
@@ -4822,13 +4870,13 @@
     var min5 = fromMaybe(0)(minimum2(table$prime));
     var max6 = fromMaybe(0)(maximum2(table$prime));
     return mapFlipped3(table)(function(v) {
-      var $26 = v === 100;
-      if ($26) {
+      var $31 = v === 100;
+      if ($31) {
         return -1;
       }
       ;
-      var $27 = min5 === max6;
-      if ($27) {
+      var $32 = min5 === max6;
+      if ($32) {
         return 1;
       }
       ;
@@ -4841,7 +4889,8 @@
       history: [],
       erdosTable: Nothing.value,
       locked: false,
-      hasWon: Empty2.value
+      status: InProgress.value,
+      isStatusShown: false
     };
   }();
   var hasWon = function(who) {
@@ -4855,10 +4904,10 @@
   };
   var erdos = function(grid) {
     return sum2(mapFlipped3(rows6)(function(row) {
-      var $28 = any2(function(i) {
+      var $33 = any2(function(i) {
         return eq13(index2(grid)(i))(new Just(X.value));
       })(row);
-      if ($28) {
+      if ($33) {
         return 0;
       }
       ;
@@ -4870,8 +4919,8 @@
   var erdosTable = function(grid) {
     return mapWithIndex2(function(i) {
       return function(symb) {
-        var $29 = notEq2(symb)(Empty2.value);
-        if ($29) {
+        var $34 = notEq2(symb)(Empty2.value);
+        if ($34) {
           return 100;
         }
         ;
@@ -4918,18 +4967,40 @@
   }();
 
   // output/Tictactoe.Update/index.js
+  var discard3 = /* @__PURE__ */ discard(discardUnit)(bindUpdate);
+  var put2 = /* @__PURE__ */ put(monadStateUpdate);
+  var delay3 = /* @__PURE__ */ delay2(/* @__PURE__ */ monadAffReader(monadAffAff));
   var bind4 = /* @__PURE__ */ bind(bindUpdate);
   var ask2 = /* @__PURE__ */ ask(/* @__PURE__ */ monadAskUpdate(/* @__PURE__ */ monadAskReaderT(monadAff)));
   var liftEffect3 = /* @__PURE__ */ liftEffect(/* @__PURE__ */ monadEffectUpdate(/* @__PURE__ */ monadEffectReader(monadEffectAff)));
-  var discard3 = /* @__PURE__ */ discard(discardUnit)(bindUpdate);
   var pure4 = /* @__PURE__ */ pure(applicativeUpdate);
   var get2 = /* @__PURE__ */ get(monadStateUpdate);
   var notEq3 = /* @__PURE__ */ notEq(/* @__PURE__ */ eqMaybe(eqSymb));
-  var notEq1 = /* @__PURE__ */ notEq(eqSymb);
+  var notEq1 = /* @__PURE__ */ notEq(eqStatus);
   var updateAtIndices3 = /* @__PURE__ */ updateAtIndices(foldableArray);
-  var put2 = /* @__PURE__ */ put(monadStateUpdate);
-  var delay3 = /* @__PURE__ */ delay2(/* @__PURE__ */ monadAffReader(monadAffAff));
+  var notEq22 = /* @__PURE__ */ notEq(eqSymb);
   var modify_3 = /* @__PURE__ */ modify_2(monadStateUpdate);
+  var showStatus = function(model) {
+    return discard3(put2({
+      isStatusShown: true,
+      erdosTable: model.erdosTable,
+      grid: model.grid,
+      history: model.history,
+      locked: model.locked,
+      status: model.status
+    }))(function() {
+      return discard3(delay3(1e3))(function() {
+        return put2({
+          isStatusShown: false,
+          erdosTable: model.erdosTable,
+          grid: model.grid,
+          history: model.history,
+          locked: model.locked,
+          status: model.status
+        });
+      });
+    });
+  };
   var evalGen = function(g2) {
     return bind4(ask2)(function(v) {
       return bind4(liftEffect3(read(v.genState)))(function(st) {
@@ -4943,66 +5014,52 @@
   var update = function(v) {
     if (v instanceof Play) {
       return bind4(get2)(function(model) {
-        var $34 = model.locked || (notEq3(index2(model.grid)(v.value0))(new Just(Empty2.value)) || notEq1(model.hasWon)(Empty2.value));
-        if ($34) {
+        var $39 = model.locked || (notEq3(index2(model.grid)(v.value0))(new Just(Empty2.value)) || notEq1(model.status)(InProgress.value));
+        if ($39) {
           return pure4(unit);
         }
         ;
         var grid = updateAtIndices3([new Tuple(v.value0, O.value)])(model.grid);
         var erdosT = erdosTable(grid);
-        var model$prime = function() {
-          var $35 = {};
-          for (var $36 in model) {
-            if ({}.hasOwnProperty.call(model, $36)) {
-              $35[$36] = model[$36];
-            }
-            ;
-          }
-          ;
-          $35.grid = grid;
-          $35.erdosTable = new Just(normalizeTable(erdosT));
-          $35.history = snoc3(model.history)({
+        var model$prime = {
+          grid,
+          erdosTable: new Just(normalizeTable(erdosT)),
+          history: snoc3(model.history)({
             square: v.value0,
             symbol: X.value,
             erdos: erdos(grid)
-          });
-          return $35;
-        }();
-        var $38 = all2(function(s) {
-          return notEq1(s)(Empty2.value);
+          }),
+          locked: model.locked,
+          status: model.status,
+          isStatusShown: model.isStatusShown
+        };
+        var $40 = all2(function(s) {
+          return notEq22(s)(Empty2.value);
         })(grid);
-        if ($38) {
+        if ($40) {
           return put2(model$prime);
         }
         ;
-        var $39 = hasWon(O.value)(grid);
-        if ($39) {
-          return put2(function() {
-            var $40 = {};
-            for (var $41 in model$prime) {
-              if ({}.hasOwnProperty.call(model$prime, $41)) {
-                $40[$41] = model$prime[$41];
-              }
-              ;
-            }
-            ;
-            $40.hasWon = O.value;
-            return $40;
-          }());
+        var $41 = hasWon(O.value)(grid);
+        if ($41) {
+          return showStatus({
+            grid: model$prime.grid,
+            erdosTable: model$prime.erdosTable,
+            history: model$prime.history,
+            status: HasWon.value,
+            locked: model$prime.locked,
+            isStatusShown: model$prime.isStatusShown
+          });
         }
         ;
-        return discard3(put2(function() {
-          var $43 = {};
-          for (var $44 in model$prime) {
-            if ({}.hasOwnProperty.call(model$prime, $44)) {
-              $43[$44] = model$prime[$44];
-            }
-            ;
-          }
-          ;
-          $43.locked = true;
-          return $43;
-        }()))(function() {
+        return discard3(put2({
+          locked: true,
+          erdosTable: model$prime.erdosTable,
+          grid: model$prime.grid,
+          history: model$prime.history,
+          isStatusShown: model$prime.isStatusShown,
+          status: model$prime.status
+        }))(function() {
           return discard3(delay3(2e3))(function() {
             return bind4(evalGen(randomPick(bestMoves(erdosT))))(function(mj) {
               if (mj instanceof Nothing) {
@@ -5011,45 +5068,47 @@
               ;
               if (mj instanceof Just) {
                 var grid$prime = updateAtIndices3([new Tuple(mj.value0, X.value)])(grid);
-                var model$prime$prime = function() {
-                  var $47 = {};
-                  for (var $48 in model$prime) {
-                    if ({}.hasOwnProperty.call(model$prime, $48)) {
-                      $47[$48] = model$prime[$48];
-                    }
-                    ;
-                  }
-                  ;
-                  $47.grid = grid$prime;
-                  $47.erdosTable = Nothing.value;
-                  $47.locked = false;
-                  $47.history = snoc3(model$prime.history)({
+                var erdosValue = erdos(grid$prime);
+                var model$prime$prime = {
+                  grid: grid$prime,
+                  erdosTable: Nothing.value,
+                  locked: false,
+                  history: snoc3(model$prime.history)({
                     square: mj.value0,
                     symbol: O.value,
-                    erdos: erdos(grid$prime)
+                    erdos: erdosValue
+                  }),
+                  isStatusShown: model$prime.isStatusShown,
+                  status: model$prime.status
+                };
+                var $43 = erdosValue === 0;
+                if ($43) {
+                  return showStatus({
+                    grid: model$prime$prime.grid,
+                    erdosTable: model$prime$prime.erdosTable,
+                    history: model$prime$prime.history,
+                    status: CannotWin.value,
+                    locked: model$prime$prime.locked,
+                    isStatusShown: model$prime$prime.isStatusShown
                   });
-                  return $47;
-                }();
-                var $50 = hasWon(X.value)(grid$prime);
-                if ($50) {
-                  return put2(function() {
-                    var $51 = {};
-                    for (var $52 in model$prime$prime) {
-                      if ({}.hasOwnProperty.call(model$prime$prime, $52)) {
-                        $51[$52] = model$prime$prime[$52];
-                      }
-                      ;
-                    }
-                    ;
-                    $51.hasWon = X.value;
-                    return $51;
-                  }());
+                }
+                ;
+                var $44 = hasWon(X.value)(grid$prime);
+                if ($44) {
+                  return showStatus({
+                    grid: model$prime$prime.grid,
+                    erdosTable: model$prime$prime.erdosTable,
+                    history: model$prime$prime.history,
+                    status: HasLost.value,
+                    locked: model$prime$prime.locked,
+                    isStatusShown: model$prime$prime.isStatusShown
+                  });
                 }
                 ;
                 return put2(model$prime$prime);
               }
               ;
-              throw new Error("Failed pattern match at Tictactoe.Update (line 45, column 7 - line 57, column 24): " + [mj.constructor.name]);
+              throw new Error("Failed pattern match at Tictactoe.Update (line 52, column 7 - line 67, column 24): " + [mj.constructor.name]);
             });
           });
         });
@@ -5066,7 +5125,7 @@
       });
     }
     ;
-    throw new Error("Failed pattern match at Tictactoe.Update (line 25, column 1 - line 25, column 38): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Tictactoe.Update (line 32, column 1 - line 32, column 38): " + [v.constructor.name]);
   };
 
   // output/Pha.Html.Elements/index.js
@@ -5219,6 +5278,7 @@
   var bind5 = /* @__PURE__ */ bind(bindMaybe);
   var mod3 = /* @__PURE__ */ mod(euclideanRingInt);
   var show3 = /* @__PURE__ */ show(showNumber);
+  var show1 = /* @__PURE__ */ show(showInt);
   var x3 = /* @__PURE__ */ x(isLengthInt);
   var y3 = /* @__PURE__ */ y(isLengthInt);
   var fontSize2 = /* @__PURE__ */ fontSize(isLengthInt);
@@ -5227,7 +5287,6 @@
   var y12 = /* @__PURE__ */ y1(isLengthInt);
   var y22 = /* @__PURE__ */ y2(isLengthInt);
   var mapFlipped4 = /* @__PURE__ */ mapFlipped(functorArray);
-  var show1 = /* @__PURE__ */ show(showInt);
   var y32 = /* @__PURE__ */ y(isLengthNumber);
   var width9 = /* @__PURE__ */ width8(isLengthInt);
   var height9 = /* @__PURE__ */ height8(isLengthInt);
@@ -5236,7 +5295,6 @@
   var y11 = /* @__PURE__ */ y1(isLengthNumber);
   var y21 = /* @__PURE__ */ y2(isLengthNumber);
   var append1 = /* @__PURE__ */ append(semigroupArray);
-  var eq22 = /* @__PURE__ */ eq(eqSymb);
   var viewGrid = function(v) {
     return div2([class_("relative shadow-md shadow-slate-200 m-4 select-none"), style("width")("300px"), style("height")("300px")])(mapWithIndex2(function(i) {
       return function(symb) {
@@ -5246,8 +5304,8 @@
         }));
         var col = mod3(i)(5);
         return div2([class_("absolute cursor-pointer flex items-center justify-center shadow text-4xl"), style("height")("20%"), style("width")("20%"), style("left")(show3(toNumber(col) * 20) + "%"), style("top")(show3(toNumber(row) * 20) + "%"), style("background-color")(function() {
-          var $39 = erdos2 === -1;
-          if ($39) {
+          var $38 = erdos2 === -1;
+          if ($38) {
             return "white";
           }
           ;
@@ -5267,35 +5325,92 @@
             return empty5;
           }
           ;
-          throw new Error("Failed pattern match at Tictactoe.View (line 47, column 11 - line 50, column 29): " + [symb.constructor.name]);
+          throw new Error("Failed pattern match at Tictactoe.View (line 52, column 11 - line 55, column 29): " + [symb.constructor.name]);
         }()]);
       };
     })(v.grid));
   };
+  var statusClass = "block bg-white rounded-2xl border-4 border-red-500 border-solid p-2 text-2xl text-red-500";
+  var viewStatus = function(v) {
+    return div2([class_("w-full h-full flex items-center justify-center absolute z-50 pointer-events-none")])([div2([class_(function() {
+      if (v.isStatusShown) {
+        return statusClass + " opacity-1";
+      }
+      ;
+      return statusClass + " opacity-0 transition transition-500";
+    }())])([function() {
+      if (v.status instanceof HasWon) {
+        return span3([])([text("Bravo, vous avez gagn\xE9 !")]);
+      }
+      ;
+      if (v.status instanceof HasLost) {
+        return span3([])([text("Dommage, vous avez perdu !")]);
+      }
+      ;
+      if (v.status instanceof CannotWin) {
+        return span3([])([text("X a bloqu\xE9 tous les alignements, vous avez perdu !")]);
+      }
+      ;
+      if (v.status instanceof InProgress) {
+        return empty5;
+      }
+      ;
+      throw new Error("Failed pattern match at Tictactoe.View (line 129, column 9 - line 133, column 42): " + [v.status.constructor.name]);
+    }()])]);
+  };
+  var scaleY = /* @__PURE__ */ function() {
+    if (rules instanceof Rules4) {
+      return 75;
+    }
+    ;
+    if (rules instanceof Rules5) {
+      return 300;
+    }
+    ;
+    throw new Error("Failed pattern match at Tictactoe.View (line 60, column 10 - line 62, column 18): " + [rules.constructor.name]);
+  }();
+  var printIndex = function(n) {
+    var printIndex$prime = function(m) {
+      return show1(div3(m)(10)) + ("." + show1(mod3(m)(10)));
+    };
+    if (rules instanceof Rules4) {
+      return printIndex$prime(n * 4 | 0);
+    }
+    ;
+    if (rules instanceof Rules5) {
+      return printIndex$prime(n);
+    }
+    ;
+    throw new Error("Failed pattern match at Tictactoe.View (line 66, column 16 - line 68, column 26): " + [rules.constructor.name]);
+  };
   var viewErdos = function(history2) {
-    return div2([class_("relative shadow-md shadow-slate-200 m-4 select-none"), style("width")("450px"), style("height")("320px")])([svg([viewBox(-15)(-30)(340)(235)])([text6([x3(-15 | 0), y3(-15 | 0), stroke("black"), fontSize2(12)])([text("Danger")]), line([x12(0), x22(0), y12(0), y22(200), stroke("black")]), g([])(mapFlipped4(range3(0)(10))(function(i) {
+    return div2([class_("relative shadow-md shadow-slate-200 m-4 select-none"), style("width")("430px"), style("height")("300px")])([svg([viewBox(-15)(-30)(340)(235)])([text6([x3(-15 | 0), y3(-15 | 0), stroke("black"), fontSize2(12)])([text("Danger")]), line([x12(0), x22(0), y12(0), y22(200), stroke("black")]), g([])(mapFlipped4(range3(0)(10))(function(i) {
       return line([x12(-3 | 0), x22(3), y12(i * 20 | 0), y22(i * 20 | 0), stroke("black")]);
     })), g([])(mapFlipped4(range3(0)(10))(function(i) {
-      return text6([x3(-15 | 0), y3(i * 20 | 0), stroke("black"), fontSize2(10)])([text(function() {
-        var $43 = i === 0;
-        if ($43) {
-          return "1.0";
-        }
-        ;
-        return "0." + show1(10 - i | 0);
-      }())]);
+      return text6([x3(-15 | 0), y3(i * 20 | 0), stroke("black"), fontSize2(10)])([text(printIndex(10 - i | 0))]);
     })), line([x12(0), x22(300), y12(200), y22(200), stroke("black")]), g([])(mapFlipped4(range3(0)(25))(function(i) {
       return line([y12(197), y22(203), x12(i * 10 | 0), x22(i * 10 | 0), stroke("black")]);
     })), g([])(mapWithIndex2(function(i) {
       return function(erdos2) {
-        return rect([x3((10 * (i + 1 | 0) | 0) - 2 | 0), y32(198 - 300 * erdos2), width9(4), height9(4)]);
+        return rect([x3((10 * (i + 1 | 0) | 0) - 2 | 0), y32(198 - scaleY * erdos2), width9(4), height9(4)]);
       };
     })(history2)), g([])(mapWithIndex2(function(i) {
       return function(v) {
-        return line([x11(10 * toNumber(i + 1 | 0)), x21(10 * toNumber(i + 2 | 0)), y11(200 - 300 * v.value0), y21(200 - 300 * v.value1), strokeWidth(2), stroke("blue")]);
+        return line([x11(10 * toNumber(i + 1 | 0)), x21(10 * toNumber(i + 2 | 0)), y11(200 - scaleY * v.value0), y21(200 - scaleY * v.value1), strokeWidth(2), stroke("blue")]);
       };
     })(pairwise(history2)))])]);
   };
+  var mainTitle = /* @__PURE__ */ function() {
+    if (rules instanceof Rules4) {
+      return "Jeu M(5,4) : essayer d'aligner 4 ronds sur cette grille !";
+    }
+    ;
+    if (rules instanceof Rules5) {
+      return "Jeu M(5,5) : essayer d'aligner 5 ronds sur cette grille !";
+    }
+    ;
+    throw new Error("Failed pattern match at Tictactoe.View (line 114, column 13 - line 116, column 72): " + [rules.constructor.name]);
+  }();
   var cardClass = "rounded overflow-hidden shadow-lg p-4";
   var card = function(title2) {
     return function(body) {
@@ -5304,30 +5419,29 @@
   };
   var buttonClass = "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200";
   var view2 = function(model) {
-    return div2([style("height")("400px"), style("width")("850px")])([card("Tic-Tac-Toe")([div2([class_("flex flex-row")])([div2([])([viewGrid(model), button([class_(buttonClass), onClick(function(v) {
+    return div2([style("height")("400px"), style("width")("830px")])([card(mainTitle)([div2([class_("relative flex flex-row")])([div2([])([viewGrid(model), button([class_(buttonClass), onClick(function(v) {
       return Reinit.value;
     })])([text("Recommencer")])]), div2([])([viewErdos(mapFlipped4(model.history)(function(v) {
       return v.erdos;
     })), function() {
-      var $47 = eq22(model.hasWon)(O.value);
-      if ($47) {
-        return span3([])([text("Le premier joueur a gagn\xE9")]);
+      if (model.status instanceof HasWon) {
+        return span3([])([text("Bravo, vous avez gagn\xE9 !")]);
       }
       ;
-      var $48 = eq22(model.hasWon)(X.value);
-      if ($48) {
-        return span3([])([text("Le second joueur a gagn\xE9")]);
+      if (model.status instanceof HasLost) {
+        return span3([])([text("Dommage, vous avez perdu !")]);
       }
       ;
-      var $49 = maybe(false)(function(e) {
-        return e.erdos === 0;
-      })(last(model.history));
-      if ($49) {
-        return span3([])([text("Le premier joueur ne peut plus gagner")]);
+      if (model.status instanceof CannotWin) {
+        return span3([])([text("Dommage, X a bloqu\xE9 tous les alignements, vous avez perdu !")]);
       }
       ;
-      return empty5;
-    }()])])])]);
+      if (model.status instanceof InProgress) {
+        return empty5;
+      }
+      ;
+      throw new Error("Failed pattern match at Tictactoe.View (line 149, column 19 - line 153, column 42): " + [model.status.constructor.name]);
+    }()]), viewStatus(model)])])]);
   };
 
   // output/Tictactoe.Main/index.js
