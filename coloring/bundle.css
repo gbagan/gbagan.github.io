@@ -1,0 +1,59 @@
+.graphparams-help {
+  height: 44em;
+  width: 26em;
+  overflow: auto;
+}
+
+.graphparams-output {
+  height: 30em;
+  width: 16em;
+  overflow: auto;
+}
+
+.graphoutput {
+  height: 50vmin;
+  width: 50vmin;
+}
+
+.graphparams-graphview-board {
+  width: 700px;
+  height: 700px;
+}
+
+.graphparams-graphview-vertex {
+  fill: black;
+}
+.graphparams-graphview-vertex.color0 {
+  fill: blue;
+}
+.graphparams-graphview-vertex.color1 {
+  fill: red;
+}
+.graphparams-graphview-vertex.color2 {
+  fill: green;
+}
+.graphparams-graphview-vertex.color3 {
+  fill: orange;
+}
+.graphparams-graphview-vertex.color4 {
+  fill: cyan;
+}
+.graphparams-graphview-vertex.color5 {
+  fill: magenta;
+}
+.graphparams-graphview-vertex.deletemode:hover {
+  fill: gray;
+}
+
+.graphparams-graphview-edge {
+  stroke: blue;
+  stroke-width: 1;
+}
+.graphparams-graphview-edge.deletemode:hover {
+  stroke: gray;
+}
+
+.graphview-text {
+  font: bold 7px sans-serif;
+  fill: red;
+}
