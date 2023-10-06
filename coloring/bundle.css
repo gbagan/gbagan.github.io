@@ -21,39 +21,62 @@
 }
 
 .graphparams-graphview-vertex {
-  fill: black;
-}
-.graphparams-graphview-vertex.color0 {
-  fill: blue;
-}
-.graphparams-graphview-vertex.color1 {
-  fill: red;
-}
-.graphparams-graphview-vertex.color2 {
-  fill: green;
-}
-.graphparams-graphview-vertex.color3 {
-  fill: orange;
-}
-.graphparams-graphview-vertex.color4 {
-  fill: cyan;
-}
-.graphparams-graphview-vertex.color5 {
-  fill: magenta;
+  stroke: black;
+  fill: white;
 }
 .graphparams-graphview-vertex.deletemode:hover {
   fill: gray;
 }
 
+.color0 {
+  fill: blue;
+}
+
+.color1 {
+  fill: red;
+}
+
+.color2 {
+  fill: lightgreen;
+}
+
+.color3 {
+  fill: orange;
+}
+
+.color4 {
+  fill: cyan;
+}
+
+.color5 {
+  fill: magenta;
+}
+
+.color6 {
+  fill: yellow;
+}
+
+.color7 {
+  fill: green;
+}
+
+.color8 {
+  fill: purple;
+}
+
+.color9 {
+  fill: gold;
+}
+
 .graphparams-graphview-edge {
   stroke: blue;
-  stroke-width: 1;
+  stroke-width: 0.5;
 }
 .graphparams-graphview-edge.deletemode:hover {
   stroke: gray;
 }
 
 .graphview-text {
-  font: bold 7px sans-serif;
-  fill: red;
+  font: bold 6px sans-serif;
+  fill: black;
 }
